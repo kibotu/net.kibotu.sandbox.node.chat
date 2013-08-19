@@ -1,0 +1,15 @@
+{
+  "name": "Chat Server",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Real time web chat",
+  "scripts": {
+    "start": "node chatserver.js"
+  },
+  "dependencies": {
+    "express": "latest",
+    "socket.io": "latest",
+    "jade": "latest"
+  },
+  "author": "jan.rabe@wooga.net"
+}
