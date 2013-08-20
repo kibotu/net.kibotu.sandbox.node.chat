@@ -20,50 +20,13 @@ public class ChatClient extends Activity {
         setContentView(R.layout.main);
         System.out.println("Starting client");
         try {
-            //testMessageToChat();
-            testSendAcknowledge();
+            testMessageToChat();
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     public void testMessageToChat() throws Exception {
-        final JSONObject message = new JSONObject();
-        try {
-            JSONArray args = new JSONArray();
-            args.put(new JSONObject().put("message", "hallo").put("username", "android"));
-            message.put("send", "message");
-            message.put("args", args);
-        } catch (JSONException e) {
-            System.out.println("JSONException: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        System.out.println("connect to " + url);
-
-        final ConnectCallback cc = new ConnectCallback() {
-            @Override
-            public void onConnectCompleted(final Exception e, final SocketIOClient client) {
-                System.out.println("onConnectCompleted");
-
-                client.on("message", new EventCallback() {
-                    @Override
-                    public void onEvent(JSONArray argument, Acknowledge acknowledge) {
-                        System.out.println("onEvent " + argument + " " + acknowledge);
-                        acknowledge.acknowledge(argument);
-                        client.emit("send", acknowledge);
-                    }
-                });
-
-                client.emit(message);
-            }
-        };
-
-        final SocketIOClient client = SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), url, cc).get();
-    }
-
-    public void testSendAcknowledge() throws Exception {
 
         System.out.println("connect to " + url);
 
