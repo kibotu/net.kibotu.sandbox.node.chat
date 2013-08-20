@@ -1,6 +1,6 @@
 {
-  "name": "Chat Server",
-  "version": "0.0.1",
+  "name": "chatserver",
+  "version": "0.0.2",
   "private": false,
   "description": "Real time web chat",
   "scripts": {

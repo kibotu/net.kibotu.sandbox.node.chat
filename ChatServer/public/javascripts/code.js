@@ -1,13 +1,16 @@
 window.onload = function() {
 
     var messages = [];
-    var socket = io.connect('http://localhost:7331');
+    var socket = io.connect('http://178.5.164.68:7331');
     var field = document.getElementById("field");
     var sendButton = document.getElementById("send");
     var content = document.getElementById("content");
     var name = document.getElementById("name");
 
     socket.on('message', function (data) {
+
+        console.log("Response:", data);
+
         if(data.message) {
             messages.push(data);
             var html = '';
@@ -27,6 +30,7 @@ window.onload = function() {
         } else {
             var text = field.value;
             socket.emit('send', { message: text, username: name.value });
+            //socket.emit('ping');
             field.value = "";
         }
     };
