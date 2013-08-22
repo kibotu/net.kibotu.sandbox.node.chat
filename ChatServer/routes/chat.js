@@ -4,5 +4,5 @@
  */
 
 exports.list = function(req, res){
-    res.render('chat', { title: 'Express' });
+    res.render('chat', { title: 'Websockets chat' });
 };

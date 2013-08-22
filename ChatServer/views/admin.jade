@@ -1,15 +1,48 @@
-!!!
-html
-    head
-    title= "Real time web chat"
-    link(rel='stylesheet', href='/stylesheets/style.css', type='text/css' )
+extends layout
+
+block content
+
+    .page-header
+        h1  Admin Console
+
+    .row
+        .col-sm-3
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Queue
+                .panel-body.control-element
+                    include queue
+
+        .col-sm-3
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Rooms
+                .panel-body.control-element
+                    include listrooms
+
+        .col-sm-6.col-md-4
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Messages
+                .panel-body.control-element.control-element
+                    include chatform
+
+        .col-sm-2
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Events
+                .panel-body.center.control-element
+                    include events
+
+    .row
+        .col-sm-10
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Preview
+                .panel-body.control-element
+                    include preview
+
+
+
     script(src='/javascripts/code.js')
     script(src='/socket.io/socket.io.js')
-    body
-        #content.chat
-        .controls
-            | Name:
-            input#name(style='width:350px;')
-            br
-            input#field(style='width:350px;')
-            input#send(type='button', value='send')

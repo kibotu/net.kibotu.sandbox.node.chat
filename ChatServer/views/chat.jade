@@ -1,15 +1,17 @@
-!!!
-html
-    head
-    title= "Real time web chat"
-    link(rel='stylesheet', href='/stylesheets/style.css', type='text/css' )
+extends layout
+
+block content
+
+    .page-header
+        h1  Websockets Chat
+
+    .row
+        .col-sm-6.col-md-4
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Chat
+                .panel-body
+                    include chatform
+
     script(src='/javascripts/code.js')
     script(src='/socket.io/socket.io.js')
-    body
-        #content.chat
-        .controls
-            | Name:
-            input#name(style='width:350px;')
-            br
-            input#field(style='width:350px;')
-            input#send(type='button', value='send')
