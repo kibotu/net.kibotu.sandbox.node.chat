@@ -16,7 +16,7 @@ block content
         .col-sm-3
             .panel.panel-default
                 .panel-heading
-                    h3.panel-title Rooms
+                    h3.panel-title Games
                 .panel-body.control-element
                     include listrooms
 
@@ -30,9 +30,9 @@ block content
         .col-sm-2
             .panel.panel-default
                 .panel-heading
-                    h3.panel-title Events
+                    h3.panel-title Client-Events
                 .panel-body.center.control-element
-                    include events
+                    include client-events
 
     .row
         .col-sm-10
@@ -42,7 +42,12 @@ block content
                 .panel-body.control-element
                     include preview
 
-
+        .col-sm-2
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Server-Events
+                .panel-body.center.control-element
+                    include server-events
 
     script(src='/javascripts/code.js')
     script(src='/socket.io/socket.io.js')

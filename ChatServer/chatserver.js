@@ -1,21 +1,13 @@
-
-/**
- * Module dependencies.
- */
-
 process.env.NODE_ENV = 'development';
 
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
-var chat = require('./routes/chat')
+var chat = require('./routes/chat');
 var admin = require('./routes/admin');
 var http = require('http');
 var path = require('path');
 var hat = require('hat');
-// serving the flash policy file
-var net = require("net");
-var io;
 
 var app = express();
 
@@ -40,23 +32,33 @@ app.get('/chat', chat.list);
 app.get('/admin', admin.list);
 
 // socket io
-io = require('socket.io').listen(app.listen(app.get('port')));
+var io = require('socket.io').listen(app.listen(app.get('port')));
 
 //io.disable('heartbeats');
 io.configure( function() {
-    io.set('close timeout', 15);
+    io.set('close timeout', 60*15); // 15 min
 });
 
 // usernames which are currently connected to the chat
 var users = {};
 
 // rooms which are currently available in chat
-var rooms = {'Queue' : [], 'Game 1' : [], 'Game 2' : []};
+var rooms = {'Queue' : []};
+
+var switchUserToRoom = function() {
+
+};
 
 // initial connection from a client. socket argument should be used in further communication with the client.
 io.sockets.on('connection', function (socket) {
 
     socket.emit('message', { message: 'Welcome!', uid: hat() });
+
+    socket.on("event", function(data) {
+        console.log("event " + JSON.stringify(data))  // server console
+        socket.emit('message', { message: JSON.stringify(data) }); // own message (for acknowledging action)
+        socket.broadcast.to(socket.room).emit('message', { username : socket.uid, message: JSON.stringify(data) }); // real broadcast to other listener in room
+    });
 
     socket.on("adduser", function(data) {
         var room = Object.keys(rooms)[0];
@@ -71,6 +73,30 @@ io.sockets.on('connection', function (socket) {
         // http://psitsmike.com/2011/10/node-js-and-socket-io-multiroom-chat-tutorial/
         socket.emit("updateroom", rooms );
         console.log(data.uid + " joined " + room);
+
+        // queue >= 2 -> move 2 user to new room
+        /*if(Object.keys(rooms.Queue).length >= 2) {
+            console.log("user in queue >= 2");
+            socket.leave(room);
+            // find out if existing room exist (except queue)
+            var newRoom = Object.keys(rooms)[Object.keys(rooms).length-1];
+            if(newRoom == room) {
+                // new room
+                newRoom =  hat();
+                // leave old room
+                console.log(rooms);
+                console.log("remove " + socket.uid + " from " + socket.room );
+                rooms[socket.room].splice(socket.uid, 1);
+                console.log(rooms);
+                // join new one
+                console.log("add " + socket.uid + " to " + newRoom );
+                rooms[newRoom] = [socket.uid];
+                console.log(rooms);
+            }
+            console.log(newRoom);
+            socket.room = newRoom;
+            socket.join(newRoom);
+        }     */
     });
 
     socket.on('send', function (data) {
@@ -90,8 +116,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function(){
-        delete rooms[socket.room][socket.uid];
-        socket.emit("updateroom", rooms );
+        rooms[socket.room].splice(socket.uid, 1);
+        socket.emit("updateroom", rooms);
         socket.broadcast.to(socket.room.key).emit('message', { message : socket.uid + ' has disconnected.' });
         socket.leave(socket.room);
     });
@@ -119,3 +145,4 @@ io.socket.on('reconnect', function () {});
 
 // "reconnecting" is emitted when the socket is attempting to reconnect with the server.
 io.socket.on('reconnecting', function () {});     */
+
