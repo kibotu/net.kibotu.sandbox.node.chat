@@ -1,7 +1,8 @@
 window.onload = function() {
 
     var messages = [];
-    var socket = io.connect('http://178.5.164.68:7331');
+    var socket = io.connect('http://localhost:3000/');
+    console.log(socket);
     var field = document.getElementById("field");
     var sendButton = document.getElementById("send");
     var name = document.getElementById("name");
@@ -31,7 +32,7 @@ window.onload = function() {
         }
     });
 
-    socket.on('updateroom', function (data) {
+    socket.on('update-room', function (data) {
         if(data)
             console.log(data);
         if(data.Queue) {
@@ -42,8 +43,8 @@ window.onload = function() {
             $("#queue").html(html);
         }
         html = '';
-        for(var i = 1; i < Object.keys(data).length; ++i) {
-            html += '<a href="#" class="list-group-item">' +  Object.keys(data)[i] + '</a>';
+        for(var i = 1; i < _.size(data); ++i) {
+            html += '<a href="#" class="list-group-item">' +  Object.keys(data)[i] + '<span class="badge pull-right">' + _.size(data[Object.keys(data)[i]]) + '</span></a>';
         }
         $("#rooms").html(html);
     });
@@ -58,20 +59,24 @@ window.onload = function() {
         }
     };
 
+    $("#create-game").click( function() {
+        socket.emit('event', { "game-event" : "create-game" });
+    });
+
     $("#start-game").click( function() {
-        socket.emit('event', { "game-event" : "game-start" });
+        socket.emit('event', { "game-event" : "start-game" });
     });
 
     $("#pause-game").click( function() {
-        socket.emit('event', { "game-event" : "pause-start" });
+        socket.emit('event', { "game-event" : "pause-game" });
     });
 
     $("#resume-game").click( function() {
-        socket.emit('event', { "game-event" : "resume-start" });
+        socket.emit('event', { "game-event" : "resume-game" });
     });
 
     $("#end-game").click( function() {
-        socket.emit('event', { "game-event" : "end-start" });
+        socket.emit('event', { "game-event" : "end-game" });
     });
 
     $("#move-units").click( function() {
