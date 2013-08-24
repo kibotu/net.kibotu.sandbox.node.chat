@@ -94,6 +94,10 @@ io.sockets.on('connection', function (socket) {
 
     socket.emit('message', { message: 'Welcome !', uid: hat() });
 
+    socket.on("message", function(data) {
+        console.log("message " + JSON.stringify(data));
+    });
+
     socket.on("event", function(data) {
         console.log("event " + JSON.stringify(data))  // server console
         socket.emit('message', { message: JSON.stringify(data) }); // own message (for acknowledging action)
@@ -120,11 +124,6 @@ io.sockets.on('connection', function (socket) {
     socket.on('send', function (data) {
         io.sockets.emit('message', data);
         console.log("Response:", data);
-    });
-
-    socket.on('ping', function (data) {
-        io.sockets.emit('pong', {"hallo": "welt"});
-        console.log("ping => pong");
     });
 
     socket.on('error', function (reason){

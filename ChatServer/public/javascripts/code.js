@@ -1,49 +1,51 @@
 $( document ).ready(function() {
 
+    $("[rel='tooltip']").tooltip();
+
     var messages = [];
-    var socket = io.connect('http://localhost:3000/');
+    var socket = io.connect('http://172.16.3.13:3000/');
 
     /** HELPER FUNCTIONS **/
 
-    var creatAlert = function(message, alertLevel) {
-        $("#messages").append('<div class="alert ' + alertLevel + '">' + message + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+    var createAlert = function(text, alertLevel) {
+        //$("#message-box").append('<div class="alert ' + alertLevel + '">' + text + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
     };
 
     /** CLIENT   https://github.com/LearnBoost/socket.io/wiki/Exposed-events **/
 
     // "connect" is emitted when the socket connected successfully
     socket.socket.on('connect', function () {
-        creatAlert('Connected.', 'alert-success');
+        createAlert('Connected.', 'alert-success');
      });
 
      // disconnect" is emitted when the socket disconnected
     socket.socket.on('disconnect', function () {
-        creatAlert('Disconnected.', 'alert-danger');
+        createAlert('Disconnected.', 'alert-danger');
      });
 
      // "connect_failed" is emitted when socket.io fails to establish a connection to the server and has no more transports to fallback to
     socket.socket.on('connect_failed', function () {
-        creatAlert('Connect Failed.', 'alert-danger');
+        createAlert('Connect Failed.', 'alert-danger');
      });
 
      // "error" is emitted when an error occurs and it cannot be handled by the other event types.
     socket.socket.on('error', function () {
-        creatAlert('Connection error.', 'alert-danger');
+        createAlert('Connection error.', 'alert-danger');
      });
 
      // "reconnect_failed" is emitted when socket.io fails to re-establish a working connection after the connection was dropped
     socket.socket.on('reconnect_failed', function () {
-        creatAlert('Reconnection failed.', 'alert-danger');
+        createAlert('Reconnection failed.', 'alert-danger');
      });
 
      // "reconnect" is emitted when socket.io successfully reconnected to the server.
     socket.socket.on('reconnect', function () {
-        creatAlert('Reconnected.', 'alert-success');
+        createAlert('Reconnected.', 'alert-success');
      });
 
      // "reconnecting" is emitted when the socket is attempting to reconnect with the server.
     socket.socket.on('reconnecting', function () {
-        creatAlert('Reconnecting...', 'alert-info');
+        createAlert('Reconnecting...', 'alert-info');
      });
 
     /** RESPONSES **/
@@ -55,7 +57,7 @@ $( document ).ready(function() {
         if(data.message) {
             messages.push(data);
             var html = '';
-            for(var i=0; i<messages.length; i++) {
+            for(var i=0; i < messages.length; ++i) {
                 html += '<b>' + (messages[i].username ? messages[i].username : 'Server') + ': </b>';
                 html += messages[i].message + '<br />';
 
@@ -73,8 +75,8 @@ $( document ).ready(function() {
     });
 
     socket.on('update-room', function (data) {
-        if(data)
-            console.log(data);
+        if(!data)
+            console.log("empty data: " + data);
         if(data.Queue) {
             var html = '';
             for(var player in data.Queue) {
@@ -93,15 +95,31 @@ $( document ).ready(function() {
 
     $("#send").click(function() {
 
-        if($("#name").val() == "") {
+        var name = $("#name").val();
+
+        if(name == "") {
             alert("Please type your name!");
         } else {
-            socket.emit('send', { message:  $("#field").val(), username: $("#name").val() });
+            var field = $("#field");
+            socket.emit('send', { message:  field.val(), username: name });
+            field.val("");
         }
     });
 
-    $("#create-game").click( function() {
-        socket.emit('event', { "game-event" : "create-game" });
+    $("#join-game_type_1vs1").click( function() {
+        socket.emit('event', { "game-event" : "join", "game-type" : "1vs1" });
+    });
+
+    $("#join-game_type_2vs2").click( function() {
+        socket.emit('event', { "game-event" : "join", "game-type" : "2vs2" });
+    });
+
+    $("#join-game_type_custom_1vs1").click( function() {
+        socket.emit('event', { "game-event" : "join", "game-type" : "custom_1vs1" });
+    });
+
+    $("#join-game_type_custom_2vs2").click( function() {
+        socket.emit('event', { "game-event" : "join", "game-type" : "custom_2vs2" });
     });
 
     $("#start-game").click( function() {
@@ -143,4 +161,10 @@ $( document ).ready(function() {
     $("#buy").click( function() {
         socket.emit('event', { "game-event" : "buy", item : 1 });
     });
+
+    /** SERVER EVENTS **/
+    $("#game-data").click( function() {
+        socket.emit('event', { "game-event" : "game-data", planets : [ { id : 0, position : [10, 10, 0] }, { id : 0, position : [10, 10, 0] }, { id : 1, position : [100, 100, 0] }], player : [{  }]  });
+    });
+
 });
