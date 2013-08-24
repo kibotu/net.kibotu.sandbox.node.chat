@@ -3,28 +3,48 @@ $( document ).ready(function() {
     var messages = [];
     var socket = io.connect('http://localhost:3000/');
 
-    /* CLIENT   https://github.com/LearnBoost/socket.io/wiki/Exposed-events
+    /** HELPER FUNCTIONS **/
 
-     // "connect" is emitted when the socket connected successfully
-     io.socket.on('connect', function () {});
+    var creatAlert = function(message, alertLevel) {
+        $("#messages").append('<div class="alert ' + alertLevel + '">' + message + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+    };
+
+    /** CLIENT   https://github.com/LearnBoost/socket.io/wiki/Exposed-events **/
+
+    // "connect" is emitted when the socket connected successfully
+    socket.socket.on('connect', function () {
+        creatAlert('Connected.', 'alert-success');
+     });
 
      // disconnect" is emitted when the socket disconnected
-     io.socket.on('disconnect', function () {});
+    socket.socket.on('disconnect', function () {
+        creatAlert('Disconnected.', 'alert-danger');
+     });
 
      // "connect_failed" is emitted when socket.io fails to establish a connection to the server and has no more transports to fallback to
-     io.socket.on('connect_failed', function () {});
+    socket.socket.on('connect_failed', function () {
+        creatAlert('Connect Failed.', 'alert-danger');
+     });
 
      // "error" is emitted when an error occurs and it cannot be handled by the other event types.
-     io.socket.on('error', function () {});
+    socket.socket.on('error', function () {
+        creatAlert('Connection error.', 'alert-danger');
+     });
 
      // "reconnect_failed" is emitted when socket.io fails to re-establish a working connection after the connection was dropped
-     io.socket.on('reconnect_failed', function () {});
+    socket.socket.on('reconnect_failed', function () {
+        creatAlert('Reconnection failed.', 'alert-danger');
+     });
 
      // "reconnect" is emitted when socket.io successfully reconnected to the server.
-     io.socket.on('reconnect', function () {});
+    socket.socket.on('reconnect', function () {
+        creatAlert('Reconnected.', 'alert-success');
+     });
 
      // "reconnecting" is emitted when the socket is attempting to reconnect with the server.
-     io.socket.on('reconnecting', function () {});     */
+    socket.socket.on('reconnecting', function () {
+        creatAlert('Reconnecting...', 'alert-info');
+     });
 
     /** RESPONSES **/
 
@@ -42,7 +62,7 @@ $( document ).ready(function() {
             }
             if(data.uid) {
                 $("#name").val(data.uid);
-                socket.emit('adduser', { uid: data.uid });
+                socket.emit('add-user', { uid: data.uid });
             }
 
             $("#content").html(html);

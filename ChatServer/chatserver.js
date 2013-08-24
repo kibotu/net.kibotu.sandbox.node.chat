@@ -42,8 +42,11 @@ var io = require('socket.io').listen(server.listen(server.get('port'),"0.0.0.0")
 
 //io.disable('heartbeats');
 io.configure( function() {
-    io.set('close timeout', 60*15); // 15 min
-    io.set('log level', 5);
+    io.set('close timeout', 60 * 15); // 15 min
+    io.set('log level', 3);
+    io.enable('browser client minification');  // send minified client
+    //io.enable('browser client etag');          // apply etag caching logic based on version number
+    //io.enable('browser client gzip');          // gzip the file
     io.set('transports', [
           'websocket'
         , 'flashsocket'
@@ -76,6 +79,7 @@ var joinOrCreateNewGame = function(socket) {
     socket.broadcast.to(socket.room.key).emit('message', { message: socket.uid + ' has switch to ' + socket.room });
 };
 
+// http://psitsmike.com/2011/10/node-js-and-socket-io-multiroom-chat-tutorial/
 var updateRooms = function() {
     _.each(users, function(socket) {
         socket.emit("update-room", rooms);
@@ -88,7 +92,7 @@ io.sockets.on('connect', function (){
 
 io.sockets.on('connection', function (socket) {
 
-    socket.emit('message', { message: 'Welcome ' + socket.handshake.sessionID + '!', uid: hat() });
+    socket.emit('message', { message: 'Welcome !', uid: hat() });
 
     socket.on("event", function(data) {
         console.log("event " + JSON.stringify(data))  // server console
@@ -101,7 +105,7 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on("adduser", function(data) {
+    socket.on("add-user", function(data) {
         var room = Object.keys(rooms)[0];
         socket.uid = data.uid;
         socket.room = room;
@@ -110,8 +114,6 @@ io.sockets.on('connection', function (socket) {
         socket.join(room);
         socket.emit('message', { message: 'You have connected to ' + room });
         socket.broadcast.to(room.key).emit('message', { message : data.uid + ' has connected to this room' });
-
-        // http://psitsmike.com/2011/10/node-js-and-socket-io-multiroom-chat-tutorial/
         updateRooms();
     });
 
