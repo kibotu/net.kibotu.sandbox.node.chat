@@ -58,7 +58,3 @@ body {
     overflow-y: auto;
     overflow-x: hidden !important;
 }
-
-.panel-body {
-    line-height : 2em;
-}

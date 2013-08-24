@@ -10,6 +10,7 @@ var path = require('path');
 var hat = require('hat');
 var net = require('net');
 var _ = require('underscore');
+var passport = require('passport');
 
 var server = express();
 
@@ -25,7 +26,8 @@ server.configure('development', function(){
     server.use(express.cookieParser('keyboard unicorn'));
     server.use(express.bodyParser());
     server.use(express.methodOverride());
-    server.use(express.session({ secret: 'keyboard unicorn' }));
+    server.use(express.session({secret: 'keyboard unicorn', key: 'express.sid'}));
+    // server.use(function (req, res) { res.end('<h2>Hello, your session id is ' + req.sessionID + '</h2>');  });
     server.use(server.router);
     server.use(express.static(path.join(__dirname, 'public')));
 });
@@ -49,6 +51,10 @@ io.configure( function() {
         , 'xhr-polling'
         , 'jsonp-polling'
     ]);
+    io.set('authorization', function (data, accept) {
+        accept(null, true);
+        console.log("Authorization : " + JSON.stringify(data));
+    });
 });
 
 // usernames which are currently connected to the chat
@@ -76,10 +82,13 @@ var updateRooms = function() {
     });
 };
 
-// initial connection from a client. socket argument should be used in further communication with the client.
+io.sockets.on('connect', function (){
+    console.info('successfully established a working connection');
+});
+
 io.sockets.on('connection', function (socket) {
 
-    socket.emit('message', { message: 'Welcome!', uid: hat() });
+    socket.emit('message', { message: 'Welcome ' + socket.handshake.sessionID + '!', uid: hat() });
 
     socket.on("event", function(data) {
         console.log("event " + JSON.stringify(data))  // server console
@@ -116,10 +125,8 @@ io.sockets.on('connection', function (socket) {
         console.log("ping => pong");
     });
 
-    //just added
-    socket.on("error", function(err) {
-        console.log("Caught flash policy server socket error: ");
-        console.log(err.stack);
+    socket.on('error', function (reason){
+        console.error('Unable to connect Socket.IO', reason);
     });
 
     socket.on('disconnect', function(){
@@ -131,27 +138,3 @@ io.sockets.on('connection', function (socket) {
         socket.leave(socket.room);
     });
 });
-
-/* CLIENT
-
-// "connect" is emitted when the socket connected successfully
-io.socket.on('connect', function () {});
-
-// disconnect" is emitted when the socket disconnected
-io.socket.on('disconnect', function () {});
-
-// "connect_failed" is emitted when socket.io fails to establish a connection to the server and has no more transports to fallback to
-io.socket.on('connect_failed', function () {});
-
-// "error" is emitted when an error occurs and it cannot be handled by the other event types.
-io.socket.on('error', function () {});
-
-// "reconnect_failed" is emitted when socket.io fails to re-establish a working connection after the connection was dropped
-io.socket.on('reconnect_failed', function () {});
-
-// "reconnect" is emitted when socket.io successfully reconnected to the server.
-io.socket.on('reconnect', function () {});
-
-// "reconnecting" is emitted when the socket is attempting to reconnect with the server.
-io.socket.on('reconnecting', function () {});     */
-
