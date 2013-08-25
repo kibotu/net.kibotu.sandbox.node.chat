@@ -8,9 +8,7 @@ var admin = require('./routes/admin');
 var http = require('http');
 var path = require('path');
 var hat = require('hat');
-var net = require('net');
 var _ = require('underscore');
-var passport = require('passport');
 
 var server = express();
 

@@ -1,15 +1,35 @@
 {
   "name": "chatserver",
-  "version": "0.0.2",
-  "private": false,
-  "description": "Real time web chat",
+  "version": "0.0.1",
+  "preferGlobal": true,
+  "description": "\"Chat\"",
+  "main": "chatserver.js",
   "scripts": {
-    "start": "node chatserver.js"
+    "start": "node chatserver.js",
+    "predeploy": "echo Starting Server.",
+    "postdeploy": "echo Server stopped."
   },
+  "repository": {
+    "type": "git",
+    "url": "net.kibotu.sandbox.node.chat"
+  },
+  "keywords": [
+    "node",
+    "chat"
+  ],
+  "author": "Jan Rabe <jan.rabe@wooga.net>",
+  "contributors": [
+    {
+      "name": "Jan Rabe",
+      "email": "jan.rabe@wooga.net"
+    }
+  ],
+  "license": "MIT",
   "dependencies": {
-    "express": "latest",
-    "socket.io": "latest",
-    "jade": "latest"
-  },
-  "author": "jan.rabe@wooga.net"
+    "express": "*",
+    "jade": "*",
+    "underscore": "*",
+    "hat": "latest",
+    "socket.io": "*"
+  }
 }
