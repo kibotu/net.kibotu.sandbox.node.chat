@@ -3,7 +3,7 @@ $( document ).ready(function() {
     $("[rel='tooltip']").tooltip();
 
     var messages = [];
-    var socket = io.connect('http://172.16.3.13:3000/');
+    var socket = io.connect('http://localhost:3000/');
 
     /** HELPER FUNCTIONS **/
 

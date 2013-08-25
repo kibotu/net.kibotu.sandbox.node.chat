@@ -26,10 +26,10 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "express": "*",
-    "jade": "*",
-    "underscore": "*",
+    "express": "latest",
+    "jade": "latest",
+    "underscore": "latest",
     "hat": "latest",
-    "socket.io": "*"
+    "socket.io": "latest"
   }
 }

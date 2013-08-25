@@ -16,9 +16,9 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "*",
-    "threejs": "*",
-    "normalize-css": "*",
-    "jquery": "*"
+    "bootstrap": "latest",
+    "threejs": "latest",
+    "normalize-css": "latest",
+    "jquery": "latest"
   }
 }
