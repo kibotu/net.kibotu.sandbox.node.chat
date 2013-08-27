@@ -92,8 +92,12 @@ io.sockets.on('connection', function (socket) {
 
     socket.emit('message', { message: 'Welcome !', uid: hat() });
 
+   // socket.emit('message', { data: { message : "welcome", uid : hat() } });
+
     socket.on("message", function(data) {
         console.log("message " + JSON.stringify(data));
+        socket.broadcast.to(rooms[0]).emit('message', data);
+        socket.emit('message', data);
     });
 
     socket.on("event", function(data) {
