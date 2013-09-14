@@ -14,7 +14,7 @@ var server = express();
 
 // development
 server.configure('development', function(){
-    server.set('port', process.env.PORT || 3000);
+    server.set('port', process.env.PORT || 80);
     server.set('views', __dirname + '/views');
     server.set('view engine', 'jade');
     server.use(express.errorHandler());
@@ -92,8 +92,6 @@ io.sockets.on('connection', function (socket) {
 
     socket.emit('message', { message: 'Welcome !', uid: hat() });
 
-   // socket.emit('message', { data: { message : "welcome", uid : hat() } });
-
     socket.on("message", function(data) {
         console.log("message " + JSON.stringify(data));
         socket.broadcast.to(rooms[0]).emit('message', data);
@@ -129,7 +127,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('error', function (reason){
-        console.error('Unable to connect Socket.IO', reason);
+        console.error('Unable to connect Socket.IO ' +  reason);
+        socket.destroy();
     });
 
     socket.on('disconnect', function(){
@@ -140,4 +139,26 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.to(socket.room.key).emit('message', { message : socket.uid + ' has disconnected.' });
         socket.leave(socket.room);
     });
+
+    socket.on('uncaughtException', function (err) {
+        console.error('Caught exception: ' + err.stack);
+    });
 });
+
+// # serving the flash policy file
+net = require("net");
+
+net.createServer(function(socket) {
+    //just added
+    socket.on("error", function() {
+        console.log("Caught flash policy server socket error: ");
+        console.log(err.stack);
+    });
+
+    socket.write('<?xml version="1.0"?>\n');
+    socket.write('<!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">\n');
+    socket.write("<cross-domain-policy>\n");
+    socket.write('<allow-access-from domain="*" to-ports="*"/>\n');
+    socket.write('</cross-domain-policy>\n');
+    socket.end();
+}).listen(843);

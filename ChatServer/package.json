@@ -30,6 +30,7 @@
     "jade": "latest",
     "underscore": "latest",
     "hat": "latest",
-    "socket.io": "latest"
+    "socket.io": "latest",
+    "net" : "latest"
   }
 }

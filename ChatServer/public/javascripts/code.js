@@ -3,7 +3,7 @@ $( document ).ready(function() {
     $("[rel='tooltip']").tooltip();
 
     var messages = [];
-    var socket = io.connect('http://127.0.0.1:3000/');
+    var socket = io.connect('http://localhost/');
 
     /** HELPER FUNCTIONS **/
 
@@ -164,7 +164,13 @@ $( document ).ready(function() {
 
     /** SERVER EVENTS **/
     $("#game-data").click( function() {
-        socket.emit('event', { "game-event" : "game-data", planets : [ { id : 0, position : [10, 10, 0] }, { id : 0, position : [10, 10, 0] }, { id : 1, position : [100, 100, 0] }], player : [{  }]  });
+        socket.emit('event', {
+            "game-event" : "game-data",
+            planets : [
+                { id : 1, position : [20, 20, 0] },
+                { id : 2, position : [20, 170, 0] },
+                { id : 3, position : [170, 20, 0] },
+                { id : 1, position : [170, 100, 0] }],
+            player : [{  }]  });
     });
-
 });
