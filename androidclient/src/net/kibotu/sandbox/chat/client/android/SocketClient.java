@@ -6,6 +6,7 @@ import com.koushikdutta.async.http.socketio.Acknowledge;
 import com.koushikdutta.async.http.socketio.JSONCallback;
 import com.koushikdutta.async.http.socketio.SocketIOClient;
 import com.koushikdutta.async.http.socketio.StringCallback;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,15 +16,10 @@ import java.util.concurrent.ExecutionException;
 public class SocketClient {
 
     private static final String TAG = SocketClient.class.getSimpleName();
-    public String url;
     public SocketIOClient client;
 
-    public SocketClient() {
-        url = "http://localhost/";
-    }
-
-    public void init() throws ExecutionException, InterruptedException {
-        if (client == null) client = SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), url, null).get();
+    public SocketClient(@NotNull String url) throws ExecutionException, InterruptedException {
+        client = SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), url, null).get();
     }
 
     private static JSONObject getJsonObject() throws JSONException {
@@ -34,13 +30,7 @@ public class SocketClient {
     }
 
     public void testMessageToChat() throws Exception {
-
-        Log.v(TAG, "connect to " + url);
-
-        init();
-
         client.setStringCallback(new StringCallback() {
-
             @Override
             public void onString(String string, Acknowledge acknowledge) {
                 Log.v(TAG, "onString " + string + " " + acknowledge);
@@ -49,7 +39,6 @@ public class SocketClient {
         });
 
         client.setJSONCallback(new JSONCallback() {
-
             @Override
             public void onJSON(final JSONObject jsonObject, final Acknowledge acknowledge) {
                 Log.v(TAG, "onString " + jsonObject + " " + acknowledge);

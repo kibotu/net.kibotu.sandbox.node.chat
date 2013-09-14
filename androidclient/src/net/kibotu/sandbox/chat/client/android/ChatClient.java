@@ -14,8 +14,8 @@ public class ChatClient extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         Log.v(TAG, "Starting client");
-        SocketClient socket = new SocketClient();
         try {
+            SocketClient socket = new SocketClient("http://localhost:3000");
             socket.testMessageToChat();
         } catch (Exception e) {
             Log.v(TAG, "Exception: " + e.getMessage());
