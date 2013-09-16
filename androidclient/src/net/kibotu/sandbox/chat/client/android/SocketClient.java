@@ -2,10 +2,7 @@ package net.kibotu.sandbox.chat.client.android;
 
 import android.util.Log;
 import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.socketio.Acknowledge;
-import com.koushikdutta.async.http.socketio.JSONCallback;
-import com.koushikdutta.async.http.socketio.SocketIOClient;
-import com.koushikdutta.async.http.socketio.StringCallback;
+import com.koushikdutta.async.http.socketio.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +27,7 @@ public class SocketClient {
     }
 
     public void testMessageToChat() throws Exception {
+
         client.setStringCallback(new StringCallback() {
             @Override
             public void onString(String string, Acknowledge acknowledge) {
@@ -41,8 +39,29 @@ public class SocketClient {
         client.setJSONCallback(new JSONCallback() {
             @Override
             public void onJSON(final JSONObject jsonObject, final Acknowledge acknowledge) {
-                Log.v(TAG, "onString " + jsonObject + " " + acknowledge);
+                Log.v(TAG, "onJson " + jsonObject + " " + acknowledge);
                 acknowledge.acknowledge(jsonObject.names());
+            }
+        });
+
+        client.setDisconnectCallback(new DisconnectCallback() {
+            @Override
+            public void onDisconnect(final Exception e) {
+                Log.v(TAG, "onDisconnect " + e.getMessage());
+            }
+        });
+
+        client.setErrorCallback(new ErrorCallback() {
+            @Override
+            public void onError(final String error) {
+                Log.v(TAG, "onError " + error);
+            }
+        });
+
+        client.setReconnectCallback(new ReconnectCallback() {
+            @Override
+            public void onReconnect() {
+                Log.v(TAG, "onReconnect");
             }
         });
 
