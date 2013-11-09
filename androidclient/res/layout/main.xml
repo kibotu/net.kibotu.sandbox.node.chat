@@ -4,10 +4,23 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
+    <Button
+            android:text="Connect"
+            android:id="@+id/connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+    </Button>
+    <Button
+        android:text="Send message"
+        android:id="@+id/send_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+    </Button>
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World, ChatClient"
             android:id="@+id/output"
             />
 </LinearLayout>
