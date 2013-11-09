@@ -22,8 +22,8 @@ public enum SocketClient {
     }
 
     public static void connect(@NotNull final String url) {
-       // if (client != null && client.isConnected())
-         //   return;
+        if (client != null && client.isConnected())
+            return;
         if (socketHandler == null)
             throw new IllegalStateException("No SocketHandler defined. Please use init() before.");
 
@@ -42,7 +42,7 @@ public enum SocketClient {
                             socketHandler.EventCallback(argument, acknowledge);
                         }
                     });
-                    /*
+
                     client.setStringCallback(new StringCallback() {
                         @Override
                         public void onString(String message, Acknowledge acknowledge) {
@@ -78,7 +78,7 @@ public enum SocketClient {
                         public void onReconnect() {
                             socketHandler.ReconnectCallback();
                         }
-                    }); */
+                    });
                 }
             }).get();
         } catch (InterruptedException | ExecutionException e) {

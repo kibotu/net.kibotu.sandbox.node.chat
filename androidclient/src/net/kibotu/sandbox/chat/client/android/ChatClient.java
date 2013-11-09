@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.koushikdutta.async.AsyncServer;
 import net.kibotu.sandbox.chat.client.android.network.AndroidSocketHandler;
 import net.kibotu.sandbox.chat.client.android.network.SocketClient;
+import org.json.JSONObject;
 
 public class ChatClient extends Activity {
 
@@ -36,13 +38,13 @@ public class ChatClient extends Activity {
             }
         });
 
-        findViewById(R.id.editText).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-            //SocketClient.Emit("send", AndroidSocketHandler.getJsonObject());
-            ChatClient.appendText("Emit: " + AndroidSocketHandler.getJsonObject());
+                JSONObject getJsonObject = AndroidSocketHandler.getJsonObject("android", ((EditText)findViewById(R.id.editText)).getText().toString());
+                SocketClient.Emit("send", getJsonObject);
             }
-        });
+         });
     }
 
     @Override
@@ -56,6 +58,7 @@ public class ChatClient extends Activity {
             @Override
             public void run() {
                 view.append(text);
+                view.append("\n");
             }
         });
     }

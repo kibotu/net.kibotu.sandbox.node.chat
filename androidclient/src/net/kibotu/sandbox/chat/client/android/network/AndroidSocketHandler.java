@@ -10,12 +10,12 @@ public class AndroidSocketHandler implements SocketHandler {
 
     private static final String TAG = AndroidSocketHandler.class.getSimpleName();
 
-    public static JSONObject getJsonObject() {
+    public static JSONObject getJsonObject(String name, String message) {
 
         JSONObject jObject = new JSONObject();
         try {
             jObject.put("name", "message");
-            jObject.put("message", "hallo welt").put("username", "android");
+            jObject.put("message", message).put("username", name);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -24,7 +24,7 @@ public class AndroidSocketHandler implements SocketHandler {
 
     @Override
     public void EventCallback(final JSONArray argument, final Acknowledge acknowledge) {
-        ChatClient.appendText("onEvent 'send' ack = " + acknowledge.toString() + " args = " + argument.toString());
+        ChatClient.appendText("onEvent 'send' ack = " + acknowledge + " args = " + argument);
     }
 
     @Override
