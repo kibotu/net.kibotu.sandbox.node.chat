@@ -86,9 +86,18 @@ public enum SocketClient {
         }
     }
 
+    public static void disconnect() {
+        if (client == null || !client.isConnected()) return;
+        client.disconnect();
+    }
+
+    public static void reconnect() {
+        if (client == null || client.isConnected()) return;
+        client.reconnect();
+    }
+
     public static void Emit(@NotNull final String name, @NotNull final JSONArray args) {
-        if (!client.isConnected())
-            throw new IllegalStateException("Not connected to the server.");
+        if (client == null || !client.isConnected()) return;
         client.emit(name, args);
     }
 

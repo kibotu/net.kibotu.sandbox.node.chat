@@ -38,6 +38,20 @@ public class ChatClient extends Activity {
             }
         });
 
+        findViewById(R.id.reconnect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                SocketClient.reconnect();
+            }
+        });
+
+        findViewById(R.id.disconnect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                SocketClient.disconnect();
+            }
+        });
+
         findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

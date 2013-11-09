@@ -27,6 +27,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
         </Button>
+        <Button
+            android:text="Reconnect"
+            android:id="@+id/reconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+    </Button>
     </GridLayout>
     <TextView
             android:layout_width="fill_parent"
@@ -42,6 +49,7 @@
             tools:context=".GridLayoutActivity">
 
         <EditText
+                android:text="Hello World!"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText"
