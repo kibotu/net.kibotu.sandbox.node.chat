@@ -3,12 +3,11 @@ package net.kibotu.sandbox.chat.client.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.koushikdutta.async.AsyncServer;
 import net.kibotu.sandbox.chat.client.android.network.AndroidSocketHandler;
-import net.kibotu.sandbox.chat.client.android.network.SocketHandler;
+import net.kibotu.sandbox.chat.client.android.network.SocketClient;
 
 public class ChatClient extends Activity {
 
@@ -25,6 +24,7 @@ public class ChatClient extends Activity {
 
         //String ip = "http://localhost:3000";
         ip = "http://192.168.2.101:3000";
+        SocketClient.init(new AndroidSocketHandler());
 
         view = (TextView) findViewById(R.id.output);
         view.setMovementMethod(new ScrollingMovementMethod());
@@ -32,32 +32,17 @@ public class ChatClient extends Activity {
         findViewById(R.id.connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                connect();
+                SocketClient.connect(ip);
             }
         });
 
-        findViewById(R.id.send_message).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.editText).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AndroidSocketHandler.Emit("send", AndroidSocketHandler.getJsonObject());
+            //SocketClient.Emit("send", AndroidSocketHandler.getJsonObject());
+            ChatClient.appendText("Emit: " + AndroidSocketHandler.getJsonObject());
             }
         });
-    }
-
-    private void connect() {
-
-        if(AndroidSocketHandler.connectionState != SocketHandler.ConnectionState.DISCONNECTED) return;
-
-        Log.v(TAG, "Starting client");
-        try {
-            AndroidSocketHandler socket = new AndroidSocketHandler();
-            AndroidSocketHandler.connect(ip);
-            // socket.testMessageToChat();
-
-        } catch (Exception e) {
-            Log.v(TAG, "Exception: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -67,14 +52,10 @@ public class ChatClient extends Activity {
     }
 
     public static void appendText(final String text) {
-
-        final TextView _view = view;
-
         context.runOnUiThread(new Runnable() {
-
             @Override
             public void run() {
-                _view.append(text);
+                view.append(text);
             }
         });
     }

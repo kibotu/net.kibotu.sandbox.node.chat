@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
     <Button
             android:text="Connect"
             android:id="@+id/connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible">
-    </Button>
-    <Button
-        android:text="Send message"
-        android:id="@+id/send_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible">
+            android:layout_gravity="center" >
     </Button>
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/output"
+            android:gravity="bottom"
+            android:layout_weight="1"/>
             />
-</LinearLayout>
+    <GridLayout
+            android:id="@+id/GridLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            tools:context=".GridLayoutActivity">
 
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal"
+                android:layout_row="1"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button2"
+                android:layout_column="2"
+                android:layout_gravity="fill_vertical"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:text="Send"/>
+    </GridLayout>
+</LinearLayout>
