@@ -46,8 +46,9 @@ public class ChatClient extends Activity {
         UdpSocketClient.init(new AndroidSocketHandler());
 ;
         ip = "192.168.2.101";
-        tcpPort = 3000;
-        udpPort = 3001;
+        ip = "178.0.89.213";
+        tcpPort = 1337;
+        udpPort = 1338;
 
         view = (TextView) findViewById(R.id.output);
         view.setMovementMethod(new ScrollingMovementMethod());

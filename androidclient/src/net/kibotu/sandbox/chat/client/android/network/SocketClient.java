@@ -3,6 +3,7 @@ package net.kibotu.sandbox.chat.client.android.network;
 import android.util.Log;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.socketio.*;
+import net.kibotu.sandbox.chat.client.android.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,6 +108,7 @@ public class SocketClient {
 
     public static void Emit(@NotNull final String name, @NotNull final JSONArray args) {
         if (socket == null || !socket.isConnected()) return;
+        Logger.v("emit", ""+args);
         socket.emit(name, args);
     }
 
