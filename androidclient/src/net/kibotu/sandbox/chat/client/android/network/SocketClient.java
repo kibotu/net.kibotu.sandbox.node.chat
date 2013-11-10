@@ -8,30 +8,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.InetAddress;
 import java.util.concurrent.ExecutionException;
 
-public enum SocketClient {
+/**
+ * using http://koush.com/AndroidAsync
+ */
+public class SocketClient {
 
-    instance;
     private static final String TAG = SocketClient.class.getSimpleName();
-    private static SocketIOClient client;
+    private static SocketIOClient socket;
     private static SocketHandler socketHandler;
 
     public static void init(@NotNull final SocketHandler socketHandler) {
         SocketClient.socketHandler = socketHandler;
     }
 
-    public static void connect(@NotNull final String url) {
-        if (client != null && client.isConnected())
+    public static void connect(@NotNull final String host, final int port) {
+        if (socket != null && socket.isConnected())
             return;
         if (socketHandler == null)
             throw new IllegalStateException("No SocketHandler defined. Please use init() before.");
 
-        SocketIORequest req = new SocketIORequest(url);
-        req.setLogging("Socket.IO", Log.VERBOSE);
+
+        SocketIORequest req = null;
+        try {
+            req = new SocketIORequest("http://" + InetAddress.getByName(host).getHostAddress() + ":" + port);
+            req.setLogging("Socket.IO", Log.VERBOSE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
-            client = SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), req, new ConnectCallback() {
+            socket = SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), req, new ConnectCallback() {
 
                 @Override
                 public void onConnectCompleted(Exception ex, SocketIOClient client) {
@@ -87,18 +96,18 @@ public enum SocketClient {
     }
 
     public static void disconnect() {
-        if (client == null || !client.isConnected()) return;
-        client.disconnect();
+        if (socket == null || !socket.isConnected()) return;
+        socket.disconnect();
     }
 
     public static void reconnect() {
-        if (client == null || client.isConnected()) return;
-        client.reconnect();
+        if (socket == null || socket.isConnected()) return;
+        socket.reconnect();
     }
 
     public static void Emit(@NotNull final String name, @NotNull final JSONArray args) {
-        if (client == null || !client.isConnected()) return;
-        client.emit(name, args);
+        if (socket == null || !socket.isConnected()) return;
+        socket.emit(name, args);
     }
 
     public static void Emit(@NotNull final String name, @NotNull final JSONObject args) {
@@ -112,5 +121,21 @@ public enum SocketClient {
             Log.v(TAG, "Exception: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public static SocketIOClient socket() {
+        return socket;
+    }
+
+    public static JSONObject getJsonObject(String name, String message) {
+
+        JSONObject jObject = new JSONObject();
+        try {
+            jObject.put("name", "message");
+            jObject.put("message", message).put("username", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jObject;
     }
 }
