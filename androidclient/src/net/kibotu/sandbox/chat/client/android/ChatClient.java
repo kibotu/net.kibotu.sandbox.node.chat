@@ -21,6 +21,7 @@ public class ChatClient extends Activity {
     public static final String TAG = ChatClient.class.getSimpleName();
     private static Activity context;
     private static TextView view;
+    public static String uid;
     private String ip;
     private int tcpPort;
     private int udpPort;
@@ -45,10 +46,13 @@ public class ChatClient extends Activity {
         SocketClient.init(new AndroidSocketHandler());
         UdpSocketClient.init(new AndroidSocketHandler());
 ;
-        ip = "192.168.2.101";
-        ip = "178.0.89.213";
+        //ip = "192.168.2.101";
+        //ip = "178.0.89.213";
+        ip = "172.16.2.141";
+        //ip = "172.19.253.37";
         tcpPort = 1337;
         udpPort = 1338;
+        uid = "android";
 
         view = (TextView) findViewById(R.id.output);
         view.setMovementMethod(new ScrollingMovementMethod());
@@ -80,7 +84,7 @@ public class ChatClient extends Activity {
         findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                JSONObject getJsonObject = SocketClient.getJsonObject("android", ((EditText) findViewById(R.id.editText)).getText().toString());
+                JSONObject getJsonObject = SocketClient.getJsonObject(ChatClient.uid, ((EditText) findViewById(R.id.editText)).getText().toString());
                 SocketClient.Emit("send", getJsonObject);
                 UdpSocketClient.Emit("send", getJsonObject);
                 //UdpSocketClient.sendData("ping".getBytes());

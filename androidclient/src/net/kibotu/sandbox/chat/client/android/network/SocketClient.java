@@ -46,6 +46,8 @@ public class SocketClient {
                 @Override
                 public void onConnectCompleted(Exception ex, SocketIOClient client) {
 
+                    socketHandler.ConnectCallback(ex, client);
+
                     client.addListener("message", new EventCallback() {
                         @Override
                         public void onEvent(final JSONArray argument, final Acknowledge acknowledge) {
@@ -135,6 +137,22 @@ public class SocketClient {
         try {
             jObject.put("name", "message");
             jObject.put("message", message).put("username", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jObject;
+    }
+
+    public static JSONObject getJsonObject(final String name, final String ... msg) {
+
+        if(msg.length % 2 != 0)
+            throw new IllegalArgumentException("must be key, value pairs " + msg.length);
+
+        JSONObject jObject = new JSONObject();
+        try {
+            jObject.put("name", "message");
+            for(int i = 0; i < msg.length; i+=2)
+                jObject.put(msg[i], msg[i+1]);
         } catch (JSONException e) {
             e.printStackTrace();
         }

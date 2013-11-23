@@ -127,6 +127,7 @@ public class UdpSocketClient implements Runnable {
     @Override
     public void run() {
         isConnected = true;
+        socketHandler.ConnectCallback(null, null);   // todo udp has no socket io client or error message to delegate
         while (isConnected()) {
             byte[] data = new byte[DEFAULT_PACKET_SIZE];
             DatagramPacket packet = new DatagramPacket(data, data.length);
